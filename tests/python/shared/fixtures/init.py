@@ -12,7 +12,7 @@ from time import sleep
 import pytest
 import requests
 
-from shared.utils.config import ASSETS_DIR, get_api_url
+from shared.utils.config import ASSETS_DIR, get_api_url, OPA_HEALTH_URL
 
 CVAT_ROOT_DIR = __file__[: __file__.rfind(osp.join("tests", ""))]
 CVAT_DB_DIR = osp.join(ASSETS_DIR, "cvat_db")
@@ -186,12 +186,19 @@ def delete_compose_files():
 
 
 def wait_for_server():
-    for _ in range(30):
-        response = requests.get(get_api_url("users/self"))
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            break
-        sleep(5)
+    def wait_for(url, attempt_count, ready_status_code):
+        while attempt_count > 0:
+            response = requests.get(url)
+            attempt_count -= 1
+            if response.status_code == ready_status_code:
+                return True, attempt_count
+            sleep(5)
+        return False, attempt_count
 
+    attempt_count = 30
+    cvat_server_status, attempt_count = wait_for(get_api_url("users/self"), attempt_count, HTTPStatus.UNAUTHORIZED)
+    opa_status, attempt_count = wait_for(OPA_HEALTH_URL, attempt_count, HTTPStatus.OK)
+    return cvat_server_status and opa_status
 
 def docker_restore_data_volumes():
     docker_cp(

@@ -187,6 +187,8 @@ services:
       cvat:
         aliases:
           - opa
+    ports:
+      - '8181:8181'
     command:
       - run
       - --server

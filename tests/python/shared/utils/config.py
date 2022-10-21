@@ -19,6 +19,9 @@ MINIO_KEY = "minio_access_key"
 MINIO_SECRET_KEY = "minio_secret_key"  # nosec
 MINIO_ENDPOINT_URL = "http://localhost:9000"
 
+# OPA settings
+OPA_HEALTH_URL = "http://localhost:8181/health?bundle=true"
+
 
 def _to_query_params(**kwargs):
     return "&".join([f"{k}={v}" for k, v in kwargs.items()])
