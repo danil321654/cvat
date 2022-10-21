@@ -12,7 +12,7 @@ from time import sleep
 import pytest
 import requests
 
-from shared.utils.config import ASSETS_DIR, get_api_url, OPA_HEALTH_URL
+from shared.utils.config import ASSETS_DIR, OPA_HEALTH_URL, get_api_url
 
 CVAT_ROOT_DIR = __file__[: __file__.rfind(osp.join("tests", ""))]
 CVAT_DB_DIR = osp.join(ASSETS_DIR, "cvat_db")
