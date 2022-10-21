@@ -196,9 +196,12 @@ def wait_for_server():
         return False, attempt_count
 
     attempt_count = 30
-    cvat_server_status, attempt_count = wait_for(get_api_url("users/self"), attempt_count, HTTPStatus.UNAUTHORIZED)
+    cvat_server_status, attempt_count = wait_for(
+        get_api_url("users/self"), attempt_count, HTTPStatus.UNAUTHORIZED
+    )
     opa_status, attempt_count = wait_for(OPA_HEALTH_URL, attempt_count, HTTPStatus.OK)
     return cvat_server_status and opa_status
+
 
 def docker_restore_data_volumes():
     docker_cp(
